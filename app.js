@@ -131,6 +131,7 @@ app.post('/login', (req, res) => {
 });
 
 function authorize(req, res, next) {
+    let SECRET_KEY = 'mi_acceso_JAP';
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
         return res.status(401).json({ error: 'Acceso denegado. No se dispone de token.' });
