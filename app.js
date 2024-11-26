@@ -168,15 +168,6 @@ app.post('/cart', async (req, res) => {
       
       await connection.beginTransaction();
   
-      
-      const [userRows] = await connection.query(
-        'SELECT NombreUsuario FROM Usuarios WHERE NombreUsuario = ?',
-        [NombreUsuario]
-      );
-  
-      if (userRows.length === 0) {
-        return res.status(404).json({ error: 'Usuario no encontrado' });
-      }
   
       // Insertar compras y actualizar las unidades vendidas
       for (const item of items) {

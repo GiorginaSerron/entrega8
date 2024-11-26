@@ -10,7 +10,7 @@ Segundo nombre VARCHAR,
 Apellido VARCHAR NOT NULL,
 Segundo apellido VARCHAR,
 Email VARCHAR UNIQUE NOT NULL,
-Nombre_usuario VARCHAR NOT NULL,
+NombreUsuario VARCHAR NOT NULL,
 Telefono INT UNIQUE,
 );
 
@@ -24,7 +24,7 @@ Precio DECIMAL(20,2) NOT NULL,
 );
 
 --Creación de la tabla de categorías
-CREATE TABLE Categorías (
+CREATE TABLE Categorias (
 Nombre VARCHAR NOT NULL,
 CategoriaID INT UNIQUE NOT NULL,
 );
@@ -37,6 +37,7 @@ CREATE TABLE Compras (
     ProductoID INT NOT NULL,
     UnidadesVendidas INT NOT NULL,
     FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID),
+    FOREIGN KEY (NombreUsuario) REFERENCES Usuarios(NombreUsuario),
     FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID)
 );
 
