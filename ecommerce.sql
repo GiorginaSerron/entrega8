@@ -33,6 +33,7 @@ CategoriaID INT UNIQUE NOT NULL,
 CREATE TABLE Compras (
     CompraID INT AUTO_INCREMENT PRIMARY KEY,
     UsuarioID INT NOT NULL,
+    NombreUsuario VARCHAR NOT NULL,
     ProductoID INT NOT NULL,
     UnidadesVendidas INT NOT NULL,
     FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID),

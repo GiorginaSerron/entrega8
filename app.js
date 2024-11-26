@@ -5,6 +5,14 @@ const fs = require('fs')
 const path = require('path')
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const mysql = require('mysql2/promise')
+
+const dbConfig = {
+    host: 'localhost',     
+    user: 'root',          
+    password: '1989',  
+    database: 'EcommerceDB' 
+  };
 
 
 app.use(express.json())
@@ -147,7 +155,73 @@ function authorize(req, res, next) {
     }
 }
 
-
+app.post('/cart', async (req, res) => {
+    const { NombreUsuario, items } = req.body;
+  
+    if (!NombreUsuario || !items || items.length === 0) {
+      return res.status(400).json({ error: 'Datos incompletos' });
+    }
+  
+    const connection = await mysql.createConnection(dbConfig);
+  
+    try {
+      
+      await connection.beginTransaction();
+  
+      
+      const [userRows] = await connection.query(
+        'SELECT NombreUsuario FROM Usuarios WHERE NombreUsuario = ?',
+        [NombreUsuario]
+      );
+  
+      if (userRows.length === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+  
+      // Insertar compras y actualizar las unidades vendidas
+      for (const item of items) {
+        const { productoID, unidadesVendidas } = item;
+  
+        // Verificar que el producto exista
+        const [productRows] = await connection.query(
+          'SELECT ProductoID FROM Productos WHERE ProductoID = ?',
+          [productoID]
+        );
+  
+        if (productRows.length === 0) {
+          return res.status(404).json({ error: `Producto con ID ${productoID} no encontrado` });
+        }
+  
+        // Insertar la compra
+        await connection.query(
+          `INSERT INTO Compras (NombreUsuario, ProductoID, UnidadesVendidas) 
+           VALUES (?, ?, ?)`,
+          [NombreUsuario, productoID, unidadesVendidas]
+        );
+  
+        // Actualizar las unidades vendidas en la tabla Productos
+        await connection.query(
+          `UPDATE Productos 
+           SET UnidadesVendidas = UnidadesVendidas + ? 
+           WHERE ProductoID = ?`,
+          [unidadesVendidas, productoID]
+        );
+      }
+  
+     
+      await connection.commit();
+  
+      res.status(201).json({ message: 'Carrito guardado exitosamente' });
+    } catch (error) {
+      
+      await connection.rollback();
+      console.error(error);
+      res.status(500).json({ error: 'Error al guardar el carrito' });
+    } finally {
+      
+      await connection.end();
+    }
+  });
 
 app.listen(port, () =>{
     console.log(`Servidor corriendo en http://localhost:${port}`)
