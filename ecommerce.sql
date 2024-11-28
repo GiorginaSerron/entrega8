@@ -1,51 +1,90 @@
---Creación de la base de datos
-CREATE DATABASE EcommerceDB;
-USE EcommerceDB;
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.11.5-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.3.0.6589
+-- --------------------------------------------------------
 
---Creación de la tabla de usuarios
-CREATE TABLE Usuarios (
-UsuarioID INT AUTO_INCREMENT PRIMARY KEY
-Nombre VARCHAR NOT NULL,
-Segundo nombre VARCHAR,
-Apellido VARCHAR NOT NULL,
-Segundo apellido VARCHAR,
-Email VARCHAR UNIQUE NOT NULL,
-NombreUsuario VARCHAR NOT NULL,
-Telefono INT UNIQUE,
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---Creacion de la tabla de productos
-CREATE TABLE Productos (
-Nombre VARCHAR NOT NULL,
-Unidades vendidas INT,
-ProductoID INT UNIQUE NOT NULL,
-Descripcion VARCHAR NOT NULL,
-Precio DECIMAL(20,2) NOT NULL,
-);
 
---Creación de la tabla de categorías
-CREATE TABLE Categorias (
-Nombre VARCHAR NOT NULL,
-CategoriaID INT UNIQUE NOT NULL,
-);
+-- Dumping database structure for ecommercedb
+CREATE DATABASE IF NOT EXISTS `ecommercedb` /*!40100 DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci */;
+USE `ecommercedb`;
 
--- Tabla Compras (relación entre Usuarios y Productos)
-CREATE TABLE Compras (
-    CompraID INT AUTO_INCREMENT PRIMARY KEY,
-    UsuarioID INT NOT NULL,
-    NombreUsuario VARCHAR NOT NULL,
-    ProductoID INT NOT NULL,
-    UnidadesVendidas INT NOT NULL,
-    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID),
-    FOREIGN KEY (NombreUsuario) REFERENCES Usuarios(NombreUsuario),
-    FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID)
-);
+-- Dumping structure for table ecommercedb.categorias
+CREATE TABLE IF NOT EXISTS `categorias` (
+  `Nombre` varchar(50) NOT NULL DEFAULT '',
+  `CategoriaID` int(11) NOT NULL,
+  UNIQUE KEY `CategoriaID` (`CategoriaID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Creación de la tabla intermedia para productos y categorías
-CREATE TABLE Producto_Categoria (
-ProductoID INT NOT NULL,
-CategoriaID INT NOT NULL,
-PRIMARY KEY (ProductoID, CategoriaID),
-FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID) ON DELETE CASCADE,
-FOREIGN KEY (CategoriaID) REFERENCES Categorias(CategoriaID) ON DELETE CASCADE
-);
+-- Data exporting was unselected.
+
+-- Dumping structure for table ecommercedb.compras
+CREATE TABLE IF NOT EXISTS `compras` (
+  `CompraID` int(11) NOT NULL AUTO_INCREMENT,
+  `NombreUsuario` varchar(255) NOT NULL,
+  `ProductoID` int(11) NOT NULL,
+  `UnidadesVendidas` int(11) NOT NULL,
+  PRIMARY KEY (`CompraID`),
+  KEY `NombreUsuario` (`NombreUsuario`),
+  KEY `ProductoID` (`ProductoID`),
+  CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`NombreUsuario`) REFERENCES `usuarios` (`NombreUsuario`),
+  CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`ProductoID`) REFERENCES `productos` (`ProductoID`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table ecommercedb.productos
+CREATE TABLE IF NOT EXISTS `productos` (
+  `Nombre` varchar(50) NOT NULL,
+  `unidadesVendidas` int(11) DEFAULT 0,
+  `ProductoID` int(11) NOT NULL DEFAULT 0,
+  `Descripcion` varchar(50) NOT NULL DEFAULT '0',
+  `Precio` decimal(20,2) NOT NULL DEFAULT 0.00,
+  UNIQUE KEY `ProductoID` (`ProductoID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table ecommercedb.producto_categoria
+CREATE TABLE IF NOT EXISTS `producto_categoria` (
+  `CategoriaID` int(11) NOT NULL DEFAULT 0,
+  `ProductoID` int(11) NOT NULL,
+  UNIQUE KEY `CategoriasID` (`CategoriaID`) USING BTREE,
+  UNIQUE KEY `ProductoID` (`ProductoID`),
+  CONSTRAINT `CategoriaID` FOREIGN KEY (`CategoriaID`) REFERENCES `categorias` (`CategoriaID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `ProductoID` FOREIGN KEY (`ProductoID`) REFERENCES `productos` (`ProductoID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table ecommercedb.usuarios
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `Nombre` varchar(50) NOT NULL DEFAULT '0',
+  `Segundo nombre` varchar(50) DEFAULT '0',
+  `Apellido` varchar(50) NOT NULL DEFAULT '0',
+  `Segundo apellido` varchar(50) DEFAULT '0',
+  `Email` varchar(50) NOT NULL DEFAULT '0',
+  `NombreUsuario` varchar(50) NOT NULL DEFAULT '0',
+  `Telefono` varchar(50) NOT NULL DEFAULT '0',
+  UNIQUE KEY `Email` (`Email`),
+  UNIQUE KEY `Telefono` (`Telefono`),
+  UNIQUE KEY `NombreUsuario` (`NombreUsuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Data exporting was unselected.
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
