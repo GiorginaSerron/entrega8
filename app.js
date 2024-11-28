@@ -214,6 +214,39 @@ app.post('/cart', async (req, res) => {
     }
   });
 
+
+  app.post('/userdata', async (req, res) => {
+    const { Nombre, SegundoNombre, Apellido, SegundoApellido, Email, NombreUsuario,Telefono } = req.body;
+  
+    const connection = await mysql.createConnection(dbConfig);
+  
+    try {
+      
+      await connection.beginTransaction();
+  
+        // Insertar usuario
+        await connection.query(
+          `INSERT INTO usuarios (Nombre, SegundoNombre, Apellido, SegundoApellido, Email, NombreUsuario,Telefono) 
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [Nombre, SegundoNombre, Apellido, SegundoApellido, Email, NombreUsuario,Telefono ]
+        );
+  
+      await connection.commit();
+  
+      res.status(201).json({ message: 'Usuario guardado exitosamente' });
+    } catch (error) {
+      
+      await connection.rollback();
+      console.error(error);
+      res.status(500).json({ error: 'Error al guardar el usuario' });
+    } finally {
+      
+      await connection.end();
+    }
+    }
+  );
+
+
 app.listen(port, () =>{
     console.log(`Servidor corriendo en http://localhost:${port}`)
 })
