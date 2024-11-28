@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `compras` (
   KEY `ProductoID` (`ProductoID`),
   CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`NombreUsuario`) REFERENCES `usuarios` (`NombreUsuario`),
   CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`ProductoID`) REFERENCES `productos` (`ProductoID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Data exporting was unselected.
 
@@ -69,13 +69,12 @@ CREATE TABLE IF NOT EXISTS `producto_categoria` (
 
 -- Dumping structure for table ecommercedb.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
-  `Nombre` varchar(50) NOT NULL DEFAULT '0',
-  `Segundo nombre` varchar(50) DEFAULT '0',
+  `SegundoNombre` varchar(50) DEFAULT '0',
   `Apellido` varchar(50) NOT NULL DEFAULT '0',
-  `Segundo apellido` varchar(50) DEFAULT '0',
+  `SegundoApellido` varchar(50) DEFAULT '0',
   `Email` varchar(50) NOT NULL DEFAULT '0',
   `NombreUsuario` varchar(50) NOT NULL DEFAULT '0',
-  `Telefono` varchar(50) NOT NULL DEFAULT '0',
+  `Telefono` varchar(50) DEFAULT '0',
   UNIQUE KEY `Email` (`Email`),
   UNIQUE KEY `Telefono` (`Telefono`),
   UNIQUE KEY `NombreUsuario` (`NombreUsuario`)
