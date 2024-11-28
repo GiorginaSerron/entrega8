@@ -216,7 +216,7 @@ app.post('/cart', async (req, res) => {
 
 
   app.post('/userdata', async (req, res) => {
-    const { Nombre, SegundoNombre, Apellido, SegundoApellido, Email, NombreUsuario,Telefono } = req.body;
+    const {segundoNombre, apellido, segundoApellido, email, telefono, nombreUsuario } = req.body;
   
     const connection = await mysql.createConnection(dbConfig);
   
@@ -226,9 +226,9 @@ app.post('/cart', async (req, res) => {
   
         // Insertar usuario
         await connection.query(
-          `INSERT INTO usuarios (Nombre, SegundoNombre, Apellido, SegundoApellido, Email, NombreUsuario,Telefono) 
-           VALUES (?, ?, ?, ?, ?, ?, ?)`,
-          [Nombre, SegundoNombre, Apellido, SegundoApellido, Email, NombreUsuario,Telefono ]
+          `INSERT INTO usuarios (SegundoNombre, Apellido, SegundoApellido, Email, Telefono, NombreUsuario) 
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [segundoNombre, apellido, segundoApellido, email, telefono, nombreUsuario ]
         );
   
       await connection.commit();
